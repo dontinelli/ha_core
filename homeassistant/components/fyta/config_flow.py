@@ -38,11 +38,13 @@ class FytaConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         errors = {}
         if user_input:
+
             fyta = FytaConnector(user_input[CONF_USERNAME], user_input[CONF_PASSWORD])
 
             try:
                 await fyta.login()
                 await fyta.client.close()
+
             except FytaConnectionError:
                 errors["base"] = "cannot_connect"
             except FytaAuthentificationError:
@@ -53,6 +55,7 @@ class FytaConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             except Exception:  # pylint: disable=broad-except
                 errors["base"] = "unknown"
             else:
+
                 return self.async_create_entry(
                     title=user_input[CONF_USERNAME], data=user_input
                 )
@@ -61,3 +64,12 @@ class FytaConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         return self.async_show_form(
             step_id="user", data_schema=DATA_SCHEMA, errors=errors
         )
+
+    async def validate_input(self, hass: HomeAssistant, data: dict) -> dict[str, Any]:
+        """Validate if the user input is correct."""
+
+        fyta = FytaConnector(data[CONF_USERNAME], data[CONF_PASSWORD])
+
+        await fyta.login()
+
+        return {"title": data[CONF_USERNAME]}

@@ -153,3 +153,24 @@ async def test_user(hass: HomeAssistant) -> None:
     assert result["title"] == USERNAME
     assert result["data"][CONF_USERNAME] == USERNAME
     assert result["data"][CONF_PASSWORD] == PASSWORD
+
+
+async def test_validate_input(hass: HomeAssistant) -> None:
+    """Test validate_input."""
+    flow = init_config_flow(hass)
+
+    with patch(
+        "homeassistant.components.fyta.config_flow.FytaConnector",
+        return_value=AsyncMock(),
+    ) as mock:
+        fyta = mock.return_value
+        fyta.login.return_value = {
+            "access_token": ACCESS_TOKEN,
+            "expiration": EXPIRATION,
+        }
+
+        result = await flow.validate_input(
+            hass, {CONF_USERNAME: USERNAME, CONF_PASSWORD: PASSWORD}
+        )
+
+    assert result["title"] == USERNAME
