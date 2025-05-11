@@ -88,7 +88,6 @@ class FytaPlantImageEntity(FytaPlantEntity, ImageEntity):
         super().__init__(coordinator, entry, description, plant_id)
         ImageEntity.__init__(self, coordinator.hass)
 
-        self._attr_name = None
         self._image_type = image_type
         # For backward compatibility, keep unique_id and entity_id for default image
         if image_type == "user":
@@ -96,9 +95,11 @@ class FytaPlantImageEntity(FytaPlantEntity, ImageEntity):
             self._attr_entity_id = (
                 f"image.{self.plant.name.lower().replace(' ', '_')}_user"
             )
+            self._attr_name = "User Image"
         else:
             self._attr_unique_id = f"{entry.entry_id}-{plant_id}-plant_image"
             # entity_id is auto-generated, but we keep the key as before
+            self._attr_name = "Plant Image"
 
     async def async_image(self) -> bytes | None:
         """Return bytes of image."""
