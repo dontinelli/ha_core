@@ -9,8 +9,8 @@
           "password": "[%key:common::config_flow::data::password%]"
         },
         "data_description": {
-          "username": "The email address to log in to your FYTA account.",
-          "password": "The password to log in to your FYTA account."
+          "username": "The email address to login to your FYTA account.",
+          "password": "The password to login to your FYTA account."
         }
       },
       "reauth_confirm": {
@@ -35,20 +35,6 @@
       "invalid_auth": "[%key:common::config_flow::error::invalid_auth%]",
       "password_error": "Invalid password",
       "unknown": "[%key:common::config_flow::error::unknown%]"
-    }
-  },
-  "options": {
-    "step": {
-      "init": {
-        "title": "Configure FYTA",
-        "description": "Configure the FYTA integration",
-        "data": {
-          "user_image": "User image"
-        },
-        "data_description": {
-          "user_image": "Use the user image insteas of the generic plant image."
-        }
-      }
     }
   },
   "entity": {
@@ -93,9 +79,9 @@
         "state": {
           "no_data": "No data",
           "too_low": "Too low",
-          "low": "[%key:common::state::low%]",
+          "low": "Low",
           "perfect": "Perfect",
-          "high": "[%key:common::state::high%]",
+          "high": "High",
           "too_high": "Too high"
         }
       },
@@ -104,9 +90,9 @@
         "state": {
           "no_data": "[%key:component::fyta::entity::sensor::temperature_status::state::no_data%]",
           "too_low": "[%key:component::fyta::entity::sensor::temperature_status::state::too_low%]",
-          "low": "[%key:common::state::low%]",
+          "low": "[%key:component::fyta::entity::sensor::temperature_status::state::low%]",
           "perfect": "[%key:component::fyta::entity::sensor::temperature_status::state::perfect%]",
-          "high": "[%key:common::state::high%]",
+          "high": "[%key:component::fyta::entity::sensor::temperature_status::state::high%]",
           "too_high": "[%key:component::fyta::entity::sensor::temperature_status::state::too_high%]"
         }
       },
@@ -115,9 +101,9 @@
         "state": {
           "no_data": "[%key:component::fyta::entity::sensor::temperature_status::state::no_data%]",
           "too_low": "[%key:component::fyta::entity::sensor::temperature_status::state::too_low%]",
-          "low": "[%key:common::state::low%]",
+          "low": "[%key:component::fyta::entity::sensor::temperature_status::state::low%]",
           "perfect": "[%key:component::fyta::entity::sensor::temperature_status::state::perfect%]",
-          "high": "[%key:common::state::high%]",
+          "high": "[%key:component::fyta::entity::sensor::temperature_status::state::high%]",
           "too_high": "[%key:component::fyta::entity::sensor::temperature_status::state::too_high%]"
         }
       },
@@ -126,9 +112,9 @@
         "state": {
           "no_data": "[%key:component::fyta::entity::sensor::temperature_status::state::no_data%]",
           "too_low": "[%key:component::fyta::entity::sensor::temperature_status::state::too_low%]",
-          "low": "[%key:common::state::low%]",
+          "low": "[%key:component::fyta::entity::sensor::temperature_status::state::low%]",
           "perfect": "[%key:component::fyta::entity::sensor::temperature_status::state::perfect%]",
-          "high": "[%key:common::state::high%]",
+          "high": "[%key:component::fyta::entity::sensor::temperature_status::state::high%]",
           "too_high": "[%key:component::fyta::entity::sensor::temperature_status::state::too_high%]"
         }
       },
@@ -137,9 +123,9 @@
         "state": {
           "no_data": "[%key:component::fyta::entity::sensor::temperature_status::state::no_data%]",
           "too_low": "[%key:component::fyta::entity::sensor::temperature_status::state::too_low%]",
-          "low": "[%key:common::state::low%]",
+          "low": "[%key:component::fyta::entity::sensor::temperature_status::state::low%]",
           "perfect": "[%key:component::fyta::entity::sensor::temperature_status::state::perfect%]",
-          "high": "[%key:common::state::high%]",
+          "high": "[%key:component::fyta::entity::sensor::temperature_status::state::high%]",
           "too_high": "[%key:component::fyta::entity::sensor::temperature_status::state::too_high%]"
         }
       },
