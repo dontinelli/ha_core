@@ -2,8 +2,13 @@
 
 from __future__ import annotations
 
+from collections.abc import Callable
+from dataclasses import dataclass
 from datetime import datetime
 import logging
+from typing import Final
+
+from fyta_cli.fyta_models import Plant
 
 from homeassistant.components.image import (
     Image,
@@ -21,6 +26,28 @@ from .entity import FytaPlantEntity
 _LOGGER = logging.getLogger(__name__)
 
 
+@dataclass(frozen=True, kw_only=True)
+class FytaImageEntityDescription(ImageEntityDescription):
+    """Describes Fyta image entity."""
+
+    url_fn: Callable[[Plant], str]
+    name_key: str | None = None
+
+
+IMAGES: Final[list[FytaImageEntityDescription]] = [
+    FytaImageEntityDescription(
+        key="plant_image",
+        translation_key="plant_image",
+        url_fn=lambda plant: plant.plant_origin_path,
+    ),
+    FytaImageEntityDescription(
+        key="plant_image_user",
+        translation_key="plant_image_user",
+        url_fn=lambda plant: plant.user_picture_path,
+    ),
+]
+
+
 async def async_setup_entry(
     hass: HomeAssistant,
     entry: FytaConfigEntry,
@@ -29,43 +56,20 @@ async def async_setup_entry(
     """Set up the FYTA plant images."""
     coordinator = entry.runtime_data
 
-    description_default = ImageEntityDescription(key="plant_image")
-    description_user = ImageEntityDescription(key="plant_image_user")
-
-    entities = []
+    entities: list[FytaPlantImageEntity] = []
     for plant_id in coordinator.fyta.plant_list:
         if plant_id in coordinator.data:
-            entities.append(
-                FytaPlantImageEntity(
-                    coordinator,
-                    entry,
-                    description_default,
-                    plant_id,
-                    image_type="default",
-                )
-            )
-            entities.append(
-                FytaPlantImageEntity(
-                    coordinator, entry, description_user, plant_id, image_type="user"
-                )
+            entities.extend(
+                FytaPlantImageEntity(coordinator, entry, description, plant_id)
+                for description in IMAGES
             )
 
     async_add_entities(entities)
 
     def _async_add_new_device(plant_id: int) -> None:
         async_add_entities(
-            [
-                FytaPlantImageEntity(
-                    coordinator,
-                    entry,
-                    description_default,
-                    plant_id,
-                    image_type="default",
-                ),
-                FytaPlantImageEntity(
-                    coordinator, entry, description_user, plant_id, image_type="user"
-                ),
-            ]
+            FytaPlantImageEntity(coordinator, entry, description, plant_id)
+            for description in IMAGES
         )
 
     coordinator.new_device_callbacks.append(_async_add_new_device)
@@ -74,36 +78,32 @@ async def async_setup_entry(
 class FytaPlantImageEntity(FytaPlantEntity, ImageEntity):
     """Represents a Fyta image."""
 
-    entity_description: ImageEntityDescription
+    entity_description: FytaImageEntityDescription
 
     def __init__(
         self,
         coordinator: FytaCoordinator,
         entry: ConfigEntry,
-        description: ImageEntityDescription,
+        description: FytaImageEntityDescription,
         plant_id: int,
-        image_type: str = "default",  # "default" or "user"
     ) -> None:
         """Initiatlize Fyta Image entity."""
         super().__init__(coordinator, entry, description, plant_id)
         ImageEntity.__init__(self, coordinator.hass)
 
-        self._image_type = image_type
         # For backward compatibility, keep unique_id and entity_id for default image
-        if image_type == "user":
+        if description.key == "plant_image":
+            self._attr_unique_id = f"{entry.entry_id}-{plant_id}-plant_image"
+            # entity_id is auto-generated, but we keep the key as before
+        else:
             self._attr_unique_id = f"{entry.entry_id}-{plant_id}-{description.key}"
             self._attr_entity_id = (
                 f"image.{self.plant.name.lower().replace(' ', '_')}_user"
             )
-            self._attr_name = "User Image"
-        else:
-            self._attr_unique_id = f"{entry.entry_id}-{plant_id}-plant_image"
-            # entity_id is auto-generated, but we keep the key as before
-            self._attr_name = "Plant Image"
 
     async def async_image(self) -> bytes | None:
         """Return bytes of image."""
-        if self._image_type == "user":
+        if self.entity_description.key == "plant_image_user":
             if self._cached_image is None:
                 response = await self.coordinator.fyta.get_plant_image(
                     self.plant.user_picture_path
@@ -128,11 +128,7 @@ class FytaPlantImageEntity(FytaPlantEntity, ImageEntity):
     @property
     def image_url(self) -> str:
         """Return the image_url for this plant."""
-        url = (
-            self.plant.user_picture_path
-            if self._image_type == "user"
-            else self.plant.plant_origin_path
-        )
+        url = self.entity_description.url_fn(self.plant)
 
         if url != self._attr_image_url:
             self._cached_image = None

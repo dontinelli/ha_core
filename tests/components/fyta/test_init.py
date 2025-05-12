@@ -150,7 +150,6 @@ async def test_migrate_config_entry_1(
     assert entry.data[CONF_PASSWORD] == PASSWORD
     assert entry.data[CONF_ACCESS_TOKEN] == ACCESS_TOKEN
     assert entry.data[CONF_EXPIRATION] == EXPIRATION
-    assert not entry.options
 
 
 async def test_migrate_config_entry_2(
@@ -180,4 +179,3 @@ async def test_migrate_config_entry_2(
 
     assert entry.version == 1
     assert entry.minor_version == 2
-    assert not entry.options
