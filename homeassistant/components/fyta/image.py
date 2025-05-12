@@ -87,7 +87,7 @@ class FytaPlantImageEntity(FytaPlantEntity, ImageEntity):
         description: FytaImageEntityDescription,
         plant_id: int,
     ) -> None:
-        """Initiatlize Fyta Image entity."""
+        """Initialize Fyta Image entity."""
         super().__init__(coordinator, entry, description, plant_id)
         ImageEntity.__init__(self, coordinator.hass)
 
