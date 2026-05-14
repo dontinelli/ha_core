@@ -92,7 +92,7 @@ class SolarLogBasicDataCoordinator(DataUpdateCoordinator[SolarlogData]):
                 translation_key="update_failed",
             ) from ex
 
-        _LOGGER.debug("Basic data successfully updated")
+        _LOGGER.debug("Basic data successfully updated: %s", data)
 
         return data
 
@@ -159,7 +159,7 @@ class SolarLogDeviceDataCoordinator(DataUpdateCoordinator[dict[int, InverterData
                 translation_key="update_failed",
             ) from ex
 
-        _LOGGER.debug("Device data successfully updated")
+        _LOGGER.debug("Device data successfully updated: %s", inverter_data)
 
         self.data = inverter_data
 
@@ -246,6 +246,9 @@ class SolarLogLongtimeDataCoordinator(DataUpdateCoordinator[EnergyData]):
             energy_data: EnergyData | None = await self.solarlog.update_energy_data(
                 timeout=self.connection_timeout
             )
+            firmware_data = await self.solarlog.update_firmware_information(
+                timeout=self.connection_timeout
+            )
         except SolarLogAuthenticationError as ex:
             raise ConfigEntryAuthFailed(
                 translation_domain=DOMAIN,
@@ -261,7 +264,13 @@ class SolarLogLongtimeDataCoordinator(DataUpdateCoordinator[EnergyData]):
             energy_data = EnergyData(None, None)
 
         self.config_entry.runtime_data.basic_data_coordinator.data.self_consumption_year = energy_data.self_consumption
+        self.config_entry.runtime_data.basic_data_coordinator.data.firmware_version = (
+            firmware_data[0]
+        )
+        self.config_entry.runtime_data.basic_data_coordinator.data.firmware_date = (
+            firmware_data[1]
+        )
 
-        _LOGGER.debug("Energy data successfully updated")
+        _LOGGER.debug("Energy data successfully updated: %s", energy_data)
 
         return energy_data

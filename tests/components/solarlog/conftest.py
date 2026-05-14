@@ -1,10 +1,16 @@
 """Test helpers."""
 
 from collections.abc import Generator
+from datetime import datetime
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
-from solarlog_cli.solarlog_models import EnergyData, InverterData, SolarlogData
+from solarlog_cli.solarlog_models import (
+    EnergyData,
+    EventData,
+    InverterData,
+    SolarlogData,
+)
 
 from homeassistant.components.solarlog.const import CONF_HAS_PWD, DOMAIN
 from homeassistant.const import CONF_HOST, CONF_PASSWORD
@@ -53,10 +59,34 @@ def mock_solarlog_connector():
     mock_solarlog_api.update_energy_data.return_value = EnergyData(950, 545)
     mock_solarlog_api.update_inverter_data.return_value = {
         0: InverterData(
-            name="Inverter 1", enabled=True, consumption_year=354687, current_power=5
+            name="Inverter 1",
+            enabled=True,
+            consumption_year=354687,
+            current_power=5,
+            errors={"0": " ", "1": "Error", "2": "unknown"},
+            events={"0": "Off", "1": "On"},
+            last_event=EventData(
+                end=datetime(2026, 4, 2, 7, 5, 44),
+                error=0,
+                event=0,
+                start=datetime(2026, 4, 1, 20, 33, 31),
+            ),
+            status="FeedIn",
         ),
         1: InverterData(
-            name="Inverter 2", enabled=True, consumption_year=354, current_power=6
+            name="Inverter 2",
+            enabled=True,
+            consumption_year=354,
+            current_power=6,
+            errors={"0": " ", "1": "Error", "2": "unknown"},
+            events={"0": "Off", "1": "On"},
+            last_event=EventData(
+                end=datetime(2026, 4, 2, 7, 5, 44),
+                error=0,
+                event=0,
+                start=datetime(2026, 4, 1, 20, 33, 31),
+            ),
+            status="FeedIn",
         ),
     }
 

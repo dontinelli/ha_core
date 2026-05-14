@@ -35,6 +35,7 @@ class SolarLogBasicCoordinatorEntity(CoordinatorEntity[SolarLogBasicDataCoordina
             identifiers={(DOMAIN, coordinator.config_entry.entry_id)},
             name="SolarLog",
             configuration_url=coordinator.solarlog.host,
+            sw_version=str(coordinator.data.firmware_version),
         )
         self.entity_description = description
 
@@ -52,6 +53,7 @@ class SolarLogInverterEntity(CoordinatorEntity[SolarLogDeviceDataCoordinator]):
     ) -> None:
         """Initialize the SolarLogInverter sensor."""
         super().__init__(coordinator)
+
         name = f"{coordinator.config_entry.entry_id}_{slugify(coordinator.solarlog.device_name(device_id))}"
         self._attr_unique_id = f"{name}_{description.key}"
         self._attr_device_info = DeviceInfo(

@@ -88,11 +88,17 @@
       "consumption_yesterday": {
         "name": "Consumption yesterday"
       },
+      "device_status": {
+        "name": "Status"
+      },
       "discharging_power": {
         "name": "Discharging power"
       },
       "efficiency": {
         "name": "Efficiency"
+      },
+      "last_event": {
+        "name": "Last event"
       },
       "last_update": {
         "name": "Last update"
