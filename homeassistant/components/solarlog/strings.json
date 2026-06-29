@@ -97,8 +97,11 @@
       "efficiency": {
         "name": "Efficiency"
       },
-      "last_event": {
-        "name": "Last event"
+      "firmware_date": {
+        "name": "Firmware date"
+      },
+      "firmware_version": {
+        "name": "Firmware version"
       },
       "last_update": {
         "name": "Last update"

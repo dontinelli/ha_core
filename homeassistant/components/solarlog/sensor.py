@@ -262,15 +262,15 @@ SOLARLOG_BASIC_SENSOR_TYPES: tuple[SolarLogCoordinatorSensorEntityDescription, .
         value_fn=lambda data: data.usage,
     ),
     SolarLogCoordinatorSensorEntityDescription(
-        key="firmware_version",
-        translation_key="firmware_version",
-        value_fn=lambda data: data.firmware_version,
-    ),
-    SolarLogCoordinatorSensorEntityDescription(
         key="firmware_date",
         translation_key="firmware_date",
         device_class=SensorDeviceClass.DATE,
         value_fn=lambda data: data.firmware_date,
+    ),
+    SolarLogCoordinatorSensorEntityDescription(
+        key="firmware_version",
+        translation_key="firmware_version",
+        value_fn=lambda data: data.firmware_version,
     ),
 )
 
