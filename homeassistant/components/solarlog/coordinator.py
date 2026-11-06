@@ -263,13 +263,18 @@ class SolarLogLongtimeDataCoordinator(DataUpdateCoordinator[EnergyData]):
         if energy_data is None:
             energy_data = EnergyData(None, None)
 
-        self.config_entry.runtime_data.basic_data_coordinator.data.self_consumption_year = energy_data.self_consumption
-        self.config_entry.runtime_data.basic_data_coordinator.data.firmware_version = (
-            firmware_data[0]
-        )
-        self.config_entry.runtime_data.basic_data_coordinator.data.firmware_date = (
-            firmware_data[1]
-        )
+        basic_data = self.config_entry.runtime_data.basic_data_coordinator.data
+        basic_data.self_consumption_year = energy_data.self_consumption
+        if firmware_data[0] != basic_data.firmware_version:
+            basic_data.firmware_version = firmware_data[0]
+            basic_data.firmware_date = firmware_data[1]
+            device_registry = dr.async_get(self.hass)
+            if device := device_registry.async_get_device(
+                identifiers={(DOMAIN, self.config_entry.entry_id)}
+            ):
+                device_registry.async_update_device(
+                    device_id=device.id, sw_version=str(firmware_data[0])
+                )
 
         _LOGGER.debug("Energy data successfully updated: %s", energy_data)
 

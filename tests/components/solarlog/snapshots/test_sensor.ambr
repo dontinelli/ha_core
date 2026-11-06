@@ -1090,7 +1090,7 @@
     'last_changed': <ANY>,
     'last_reported': <ANY>,
     'last_updated': <ANY>,
-    'state': "<MagicMock name='SolarLogConnector().update_firmware_information().__getitem__().isoformat()' id='140092714521264'>",
+    'state': '2024-01-01',
   })
 # ---
 # name: test_all_entities[sensor.solarlog_firmware_version-entry]
@@ -1140,7 +1140,7 @@
     'last_changed': <ANY>,
     'last_reported': <ANY>,
     'last_updated': <ANY>,
-    'state': "<MagicMock name='SolarLogConnector().update_firmware_information().__getitem__()' id='140092714900112'>",
+    'state': '1.0',
   })
 # ---
 # name: test_all_entities[sensor.solarlog_installed_peak_power-entry]

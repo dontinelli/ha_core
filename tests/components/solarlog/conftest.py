@@ -1,7 +1,7 @@
 """Test helpers."""
 
 from collections.abc import Generator
-from datetime import datetime
+from datetime import date, datetime
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
@@ -57,6 +57,10 @@ def mock_solarlog_connector():
         1: InverterData(name="Inverter 2", enabled=True),
     }
     mock_solarlog_api.update_energy_data.return_value = EnergyData(950, 545)
+    mock_solarlog_api.update_firmware_information.return_value = (
+        "1.0",
+        date(2024, 1, 1),
+    )
     mock_solarlog_api.update_inverter_data.return_value = {
         0: InverterData(
             name="Inverter 1",
